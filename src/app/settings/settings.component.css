@@ -1,0 +1,9 @@
+
+.formNewLine {
+  display: block;
+  clear:  left;
+  margin: 4px 4px;
+  padding: 8px 2px;
+  width: 90%;
+}
+

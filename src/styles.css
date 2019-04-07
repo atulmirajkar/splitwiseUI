@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~font-awesome/css/font-awesome.css';
+
+app-root {
+  display: block;
+  width: 100%;
+}
+
+
+.ng-sidebar--opened {
+
+  background: cornflowerblue;
+}
+
+
+.app-sidebar {
+  background-color: cornflowerblue;
+  padding: 2em 1em;
+}
+  .app-sidebar.ng-sidebar--opened.ng-sidebar--over {
+    box-shadow: 0 0 2.5em rgba(85, 85, 85, 0.5);
+  }

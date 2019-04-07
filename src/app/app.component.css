@@ -1,0 +1,11 @@
+ng-sidebar-container {
+  height: 100vh;
+
+}
+
+
+app-monthly-graph{
+  display: block;
+  width: 100%;
+  margin: 20px;
+}
