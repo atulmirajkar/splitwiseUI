@@ -1,10 +1,14 @@
 
     <ng-sidebar-container >
 
-      <ng-sidebar [(opened)]="_opened" mode="over" autoCollapseWidth=700 [closeOnClickOutside]="true"  [sidebarClass]="'app-sidebar'">
-        <i class="fa fa-bars fa-lg" (click)="_toggleSidebar()"></i>
-        <i class="fa fa-sign-in fa-lg" (click)="_login()"></i>
-        <i class="fa fa-sign-out fa-lg" (click)="_logout()"></i>
+      <ng-sidebar [(opened)]="_opened" mode="over" autoCollapseWidth=700  [sidebarClass]="'app-sidebar'">
+        <i class="fa fa-times fa-lg" (click)="_toggleSidebar()"></i>
+        <div class="sidebarHeader">
+
+            <button type="button" class="btn btn-dark btn-sm" (click)="_login()">Refresh</button>
+            <button type="button" class="btn btn-dark btn-sm" (click)="_logout()">End Session</button>
+        </div>
+
         <app-settings></app-settings>
       </ng-sidebar>
 

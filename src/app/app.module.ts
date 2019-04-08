@@ -16,9 +16,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 
 import { CommonModule } from '@angular/common';
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
-PlotlyModule.plotlyjs = PlotlyJS;
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +34,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AngularFontAwesomeModule,
     HttpClientModule,
     CommonModule,
-    PlotlyModule
+    PlotlyViaWindowModule
   ],
   providers: [HTTPControllerService],
   bootstrap: [AppComponent]
