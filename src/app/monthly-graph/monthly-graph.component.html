@@ -1,12 +1,38 @@
-<div class="container-fluid">
+
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-6">
-          <plotly-plot [data]="expenseByCategory.data" [layout]="expenseByCategory.layout"></plotly-plot>
+          <plotly-plot [data]="expenseByCategory.data" [layout]="expenseByCategory.layout" (click)="categoryGraphDrillDown($event)"></plotly-plot>
         </div>
 
         <div class="col-sm-12 col-md-12 col-lg-6">
-            <plotly-plot [data]="expenseByMonth.data" [layout]="expenseByMonth.layout"></plotly-plot>
+            <plotly-plot [data]="expenseByMonth.data" [layout]="expenseByMonth.layout" (click)="monthGraphDrillDown($event)"></plotly-plot>
         </div>
-      </div>
-</div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+          <div class="table-responsive-sm">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">User</th>
+                      <th scope="col">Expense</th>
+                      <th scope="col">Category</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let expense of drillExpenseArr">
+                      <td>{{expense.date | date:"MM/dd/yy"}}</td>
+                      <td>{{expense.userName}}</td>
+                      <td>{{expense.owedShare}}</td>
+                      <td>{{expense.category}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+          </div>
+
+          </div>
+
+    </div>
 

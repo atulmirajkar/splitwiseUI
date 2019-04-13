@@ -23,7 +23,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
   declarations: [
     AppComponent,
     MonthlyGraphComponent,
-    SettingsComponent
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +34,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     AngularFontAwesomeModule,
     HttpClientModule,
     CommonModule,
-    PlotlyViaWindowModule
+    PlotlyViaWindowModule,
   ],
   providers: [HTTPControllerService],
   bootstrap: [AppComponent]

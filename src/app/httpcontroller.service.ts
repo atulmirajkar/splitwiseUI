@@ -16,9 +16,9 @@ export class Expense{
   date: string;
 }
 
-class User{
-  private id: number;
-  private first_name: string;
+export class User{
+  public id: number;
+  public first_name: string;
 }
 
 interface Config {
@@ -122,4 +122,6 @@ export class HTTPControllerService {
       this.__userArr.next(data);
     });
   }
+
+
 }

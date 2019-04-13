@@ -1,16 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe ,PipeTransform} from '@angular/core';
 import { HTTPControllerService } from '../httpcontroller.service';
 import { Observable } from 'rxjs';
-import { Expense} from '../httpcontroller.service';
+import { Expense,User} from '../httpcontroller.service';
+import { stringify } from '@angular/core/src/util';
 
+class DrillDownExpense {
+  userName: string;
+  owedShare: number;
+  date: Date;
+  category:string;
+
+  constructor(){
+    this.userName = '';
+    this.owedShare = 0;
+    this.date = undefined;
+    this.category = '';
+  }
+}
 
 @Component({
   selector: 'app-monthly-graph',
   templateUrl: './monthly-graph.component.html',
-  styleUrls: ['./monthly-graph.component.css']
+  styleUrls: ['./monthly-graph.component.css'],
 })
 export class MonthlyGraphComponent implements OnInit {
   httpService: HTTPControllerService;
+
+  //expenses by category
+  public categoryExpenseMap: Map<string, DrillDownExpense[]>;
+
+  //expenses by month
+  public monthExpenseMap: Map<string, DrillDownExpense[]>;
+
+  public drillExpenseArr:DrillDownExpense[];
+
+
+  //user arr
+  public userArr:User[];
 
   //expense
   public expenseArr: Observable<Expense[]>;
@@ -68,26 +94,57 @@ export class MonthlyGraphComponent implements OnInit {
   constructor(httpService: HTTPControllerService) {
     this.httpService = httpService;
     this.expenseArr = httpService.expenseArr;
+    this.categoryExpenseMap = new Map<string,DrillDownExpense[]>();
+    this.monthExpenseMap = new Map<string, DrillDownExpense[]>();
     this.clearProperties();
   }
 
-  clearProperties(){
+  clearProperties() {
     this.dateArr = [];
     this.expenseValArr = [];
     this.categoryArr = [];
     this.monthArr = [];
+    this.categoryExpenseMap.clear();
+    this.monthExpenseMap.clear();
+    this.drillExpenseArr= [];
   }
 
   ngOnInit() {
+
+    //subscribe expenseArr
     this.httpService.expenseArr.subscribe((data: Expense[]) => {
       let tempDate: Date;
+      let monthStr:string;
       this.clearProperties();
       data.forEach(element => {
         tempDate = new Date(element.date);
+        monthStr = tempDate.getFullYear() + ' ' + this.monthNames[tempDate.getMonth()];
         this.dateArr.push(tempDate);
         this.expenseValArr.push(element.owed_share);
         this.categoryArr.push(element.category);
-        this.monthArr.push(tempDate.getFullYear() + ' ' + this.monthNames[tempDate.getMonth()]);
+        this.monthArr.push(monthStr);
+
+        //setup map for drill down
+        const drillDownExpense = new DrillDownExpense();
+        drillDownExpense.userName = this.getUserName(element.user_id);
+        drillDownExpense.owedShare =element.owed_share;
+        drillDownExpense.date = tempDate;
+        drillDownExpense.category = element.category;
+
+        const catExpenseArr = this.categoryExpenseMap.get(element.category);
+        if (!catExpenseArr) {
+          this.categoryExpenseMap.set(element.category, [drillDownExpense]);
+        } else {
+          catExpenseArr.push(drillDownExpense);
+        }
+
+        const monthExpenseArr = this.monthExpenseMap.get(monthStr);
+        if (!monthExpenseArr) {
+          this.monthExpenseMap.set(monthStr,[drillDownExpense]);
+        } else {
+          monthExpenseArr.push(drillDownExpense);
+        }
+
       });
 
 
@@ -101,9 +158,46 @@ export class MonthlyGraphComponent implements OnInit {
 
     });
 
-
+    //subscribe userArr
+    this.httpService.userArr.subscribe((data: User[]) => {
+      this.userArr = [];
+      this.userArr = data;
+    });
   }
 
 
+  getUserName(userID: number): string {
+    if (!userID) {
+      return '';
+    }
+    for (const user of this.userArr) {
+      if (user.id === userID) {
+        return user.first_name;
+      }
+    }
+    return '';
+  }
 
+  /**
+   * graph click event
+   * @param data from click event
+   */
+  categoryGraphDrillDown(data) {
+    if (!data) {
+      return;
+    }
+    if (Array.isArray(data.points) && data.points[0].x !== '') {
+      this.drillExpenseArr = this.categoryExpenseMap.get(data.points[0].x);
+    }
+
+  }
+
+  monthGraphDrillDown(data){
+    if (!data) {
+      return;
+    }
+    if (Array.isArray(data.points) && data.points[0].x !== '') {
+      this.drillExpenseArr = this.monthExpenseMap.get(data.points[0].x);
+    }
+  }
 }
