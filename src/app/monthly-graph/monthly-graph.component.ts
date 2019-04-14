@@ -192,6 +192,10 @@ export class MonthlyGraphComponent implements OnInit {
 
   }
 
+  /**
+   *
+   * @param data from click event
+   */
   monthGraphDrillDown(data){
     if (!data) {
       return;

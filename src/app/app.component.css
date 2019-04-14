@@ -2,10 +2,10 @@ ng-sidebar-container {
   height: 100vh;
 
 }
-.sidebarHeader button{
-  margin: 10px 10px;
-}
 
+i{
+  padding: 10px 10px;
+}
 app-monthly-graph{
   display: block;
   width: 100%;

@@ -1,6 +1,6 @@
 
    <div class="formNewLine">
-    <label>Select Group:</label>
+    <label >Select Group:</label>
 
     <select  style="width: 100%" [(ngModel)]="selectedGroup">
       <option *ngFor="let c of GroupArr | async | keyvalue" [ngValue]="c">{{c.value}}</option>
@@ -12,8 +12,6 @@
         <label>Start Date:</label>
         <i style="display: inline;" class="fa fa-calendar" aria-hidden="true" (click)="d.toggle()" ></i>
         <input class="form-control" placeholder="yyyy-mm-dd" name="startDatePicker" [(ngModel)]="selectedStartDate" ngbDatepicker #d="ngbDatepicker">
-        <!-- <input type="button" class="far fa-calendar-alt" (click)="d.toggle()" type="button">-->
-
     </div>
 
     <div class="formNewLine">
@@ -21,12 +19,11 @@
         <label>End Date:</label>
         <i style="display: inline;" class="fa fa-calendar" aria-hidden="true" (click)="d2.toggle()" ></i>
         <input class="form-control" placeholder="yyyy-mm-dd" name="endDatePicker" [(ngModel)]="selectedEndDate" ngbDatepicker #d2="ngbDatepicker">
-        <!-- <button type="button" class="fa fa-calendar" (click)="d2.toggle()"></button> -->
-
     </div>
 
     <div class="formNewLine">
       <button class="btn btn-dark btn-sm" type="submit" (click)="ApplySetting()">Apply</button>
+      <button type="button" class="btn btn-dark btn-sm" (click)="_login()">Refresh</button>
     </div>
 
 

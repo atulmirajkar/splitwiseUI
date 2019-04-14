@@ -21,11 +21,4 @@ export class AppComponent {
     this._opened = !this._opened;
   }
 
-  public _logout() {
-    this.__httpService.logout();
-  }
-
-  public _login() {
-    this.__httpService.refresh();
-  }
 }

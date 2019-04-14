@@ -48,4 +48,11 @@ export class SettingsComponent implements OnInit {
 
   }
 
+  public _logout() {
+    this.__httpService.logout();
+  }
+
+  public _login() {
+    this.__httpService.refresh();
+  }
 }
