@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HTTPControllerService } from '../httpcontroller.service';
+import { HTTPControllerService, Group } from '../httpcontroller.service';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {Observable} from 'rxjs';
 
@@ -15,19 +15,18 @@ export class SettingsComponent implements OnInit {
   private __httpService: HTTPControllerService;
 
   // setting properties
-  public selectedGroup: {key: number, value: number};
+  public selectedGroup: Group;
   public selectedStartDate: NgbDateStruct;
   public selectedEndDate: NgbDateStruct;
 
-  public GroupArr: Observable<any>;
-  public UserArr: Observable<any>;
+  public GroupArrObs: Observable<any>;
+  public groupArr:Group[];
 
 
 
   constructor(httpService: HTTPControllerService) {
     this.__httpService = httpService;
-    this.GroupArr = this.__httpService.groupArr;
-    this.UserArr = this.__httpService.userArr;
+    this.GroupArrObs = this.__httpService.groupArr;
 
     // default start date to start of month
     // default end date to today
@@ -39,12 +38,17 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
       this.__httpService.getGroups();
+       //subscribe ;
+    this.GroupArrObs.subscribe((data: Group[]) => {
+      this.groupArr = data;
+    });
   }
 
   ApplySetting() {
 
-    this.__httpService.getExpenses(this.selectedGroup.key, this.selectedStartDate, this.selectedEndDate);
-    this.__httpService.getUsers(this.selectedGroup.key);
+    this.__httpService.getExpenses(this.selectedGroup.ID, this.selectedStartDate, this.selectedEndDate);
+    this.__httpService.getUsers(this.selectedGroup.ID);
+    this.__httpService.getCategories();
 
   }
 
@@ -54,5 +58,11 @@ export class SettingsComponent implements OnInit {
 
   public _login() {
     this.__httpService.refresh();
+  }
+
+  public groupChange(data){
+    console.log(data);
+    this.selectedGroup=data;
+    this.__httpService.changeGroupSelection(this.selectedGroup);
   }
 }

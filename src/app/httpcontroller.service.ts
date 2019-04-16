@@ -1,12 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import {BehaviorSubject, Observable, config} from 'rxjs';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../environments/environment';
 
+
+/**********************************create expense******************************** */
+export interface CreateExpense {
+  group_id:        number;
+  description:     string;
+  payment:         boolean;
+  cost:            number;
+  // users__0__user_id:number;
+  // users__0__paid_share:number;
+  // users__0__owed_share:number;
+  // users__1__user_id?:number;
+  // users__1__paid_share?:number;
+  // users__1__owed_share?:number;
+  category_id:   number;
+  currency_code?: string;
+  [userShare: string] : number|boolean|string;
+}
+
+/**********************************create expense******************************** */
+
+export class Category{
+  public ID:number;
+  public Name:string;
+}
+
 export class Group{
-  private ID: number;
-  private name: string;
+  public ID: number;
+  public Name: string;
+  constructor(){
+    this.ID=0;
+    this.Name="";
+  }
 }
 
 export class Expense{
@@ -35,6 +64,12 @@ export class HTTPControllerService {
   private __groupArr = new BehaviorSubject<Group[]>([]);
   public groupArr: Observable<any> = this.__groupArr.asObservable();
 
+  private __selectedGroup = new BehaviorSubject<Group>(new Group());
+  public selectedGroup:Observable<Group> = this.__selectedGroup.asObservable();
+
+
+
+
   //users
   private __userArr = new BehaviorSubject<User[]>([]);
   public userArr: Observable<any> = this.__userArr.asObservable();
@@ -42,6 +77,10 @@ export class HTTPControllerService {
   //expenses
   private __expenseArr = new BehaviorSubject<Expense[]>([]);
   public expenseArr: Observable<Expense[]> = this.__expenseArr.asObservable();
+
+  //category
+  private __categoryArr = new BehaviorSubject<Category[]>([]);
+  public categoryArr: Observable<Category[]> = this.__categoryArr.asObservable();
 
   //baseURL
   private baseURL: string;
@@ -51,6 +90,10 @@ export class HTTPControllerService {
     this.__http = http;
     this.baseURL = environment.baseURL;
 
+  }
+
+  changeGroupSelection(group: Group){
+    this.__selectedGroup.next(group);
   }
 
   /*log out */
@@ -110,7 +153,7 @@ export class HTTPControllerService {
 
   }
   /* getUsers - get users for a group*/
-  getUsers(groupID: number){
+  getUsers(groupID: number) {
     const params: HttpParams = new HttpParams()
     .set('groupID', groupID.toString());
 
@@ -123,5 +166,26 @@ export class HTTPControllerService {
     });
   }
 
+  getCategories(){
+    this.__http.get(this.baseURL + 'GetCategories', {withCredentials:true})
+    .subscribe((data: Category[]) => {
+      this.__categoryArr.next(data);
+    })
+  }
+
+  createTestExpense(expenseObj : CreateExpense) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      }),
+      withCredentials: true,
+    };
+
+    this.__http.post(this.baseURL + 'CreateExpense', JSON.stringify(expenseObj), httpOptions)
+    //this.__http.get(this.baseURL + 'CreateExpense', {withCredentials: true})
+    .subscribe((data) => {
+      console.log(data);
+    });
+  }
 
 }

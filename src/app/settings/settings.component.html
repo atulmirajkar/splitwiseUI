@@ -2,8 +2,8 @@
    <div class="formNewLine">
     <label >Select Group:</label>
 
-    <select  style="width: 100%" [(ngModel)]="selectedGroup">
-      <option *ngFor="let c of GroupArr | async | keyvalue" [ngValue]="c">{{c.value}}</option>
+    <select  style="width: 100%" [ngModel]="selectedGroup" (ngModelChange)="groupChange($event)">
+      <option *ngFor="let c of groupArr" [ngValue]="c">{{c.Name}}</option>
     </select>
    </div>
 
@@ -25,7 +25,5 @@
       <button class="btn btn-dark btn-sm" type="submit" (click)="ApplySetting()">Apply</button>
       <button type="button" class="btn btn-dark btn-sm" (click)="_login()">Refresh</button>
     </div>
-
-
 
 

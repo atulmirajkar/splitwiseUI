@@ -1,8 +1,8 @@
-import { Component, OnInit, Pipe ,PipeTransform} from '@angular/core';
-import { HTTPControllerService } from '../httpcontroller.service';
+import { Component, OnInit, Pipe ,PipeTransform, Input} from '@angular/core';
+import { HTTPControllerService, CreateExpense, Category, Group } from '../httpcontroller.service';
 import { Observable } from 'rxjs';
 import { Expense,User} from '../httpcontroller.service';
-import { stringify } from '@angular/core/src/util';
+import { groupBy } from 'rxjs/internal/operators/groupBy';
 
 class DrillDownExpense {
   userName: string;
@@ -50,13 +50,29 @@ export class MonthlyGraphComponent implements OnInit {
   //expense
   public expenseValArr: Number[];
 
-  //category
+  //expense category arr
+  public expenseCatArr: Category[];
+
+  //selected category
+  public selectedCategory: Category;
+
+  //description
+  public description: string;
+
+  //amount
+  public amount:number;
+
+  //graph category
   public categoryArr: string[];
 
   //monthNames
   monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
+
+  //selected group obs
+  public selectedGroupObs: Observable<Group>;
+  public selectedGroup: Group;
 
   public expenseByCategory = {
     data: [
@@ -93,9 +109,12 @@ export class MonthlyGraphComponent implements OnInit {
 
   constructor(httpService: HTTPControllerService) {
     this.httpService = httpService;
+    //this.expenseCatArrObs = this.httpService.categoryArr;
     this.expenseArr = httpService.expenseArr;
     this.categoryExpenseMap = new Map<string,DrillDownExpense[]>();
     this.monthExpenseMap = new Map<string, DrillDownExpense[]>();
+    this.description="";
+    this.amount=0.0;
     this.clearProperties();
   }
 
@@ -160,8 +179,17 @@ export class MonthlyGraphComponent implements OnInit {
 
     //subscribe userArr
     this.httpService.userArr.subscribe((data: User[]) => {
-      this.userArr = [];
       this.userArr = data;
+    });
+
+    //subscribe expenseCatArr;
+    this.httpService.categoryArr.subscribe((data: Category[]) => {
+      this.expenseCatArr = data;
+    })
+
+    //subscribe selected group
+    this.httpService.selectedGroup.subscribe( (data:Group) => {
+      this.selectedGroup = data;
     });
   }
 
@@ -203,5 +231,47 @@ export class MonthlyGraphComponent implements OnInit {
     if (Array.isArray(data.points) && data.points[0].x !== '') {
       this.drillExpenseArr = this.monthExpenseMap.get(data.points[0].x);
     }
+  }
+
+  CreateExpense(){
+
+    //     cost	10
+    // currency_code	USD
+    // group_id	6962826
+    // users__0__user_id	1446024
+    // users__0__paid_share	10.00
+    // users__0__owed_share	5.00
+    // users__1__user_id	6521219
+    // users__1__paid_share	0.00
+    // users__1__owed_share	5.00
+    // category_id	18
+    // date	Sun+Apr+14+2019+20:32:46+GMT-0500+(Central+Daylight+Time)
+    // description	test
+    // creation_method	equal
+
+    let expenseObj:CreateExpense ={
+      description :this.description,
+      group_id: this.selectedGroup.ID,
+      payment :false,
+      cost:this.amount,
+      category_id:this.selectedCategory.ID,
+      currency_code:"USD",
+
+    }
+    let numUsers = this.userArr.length;
+    if(numUsers<=1){
+      return;
+    }
+
+    //share for other users
+    let share = this.amount / numUsers;
+
+    for(const index in this.userArr) {
+      expenseObj['users__'+index+'__user_id']=this.userArr[index].id;
+      expenseObj['users__'+index+'__paid_share']=share;
+      expenseObj['users__'+index+'__owed_share']=share;
+    }
+
+    this.httpService.createTestExpense(expenseObj);
   }
 }

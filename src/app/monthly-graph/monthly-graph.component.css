@@ -2,6 +2,28 @@ plotly-plot{
   padding: 10px 10px;
 }
 
-.tableWrapper{
+.contentWrapper{
   padding: 10px 80px;
+}
+
+
+.table-responsive-sm.contentWrapper{
+  max-height: 300px;
+  overflow-y: scroll;
+}
+.formNewLine {
+  display: block;
+  clear:  left;
+  margin: 4px 4px;
+  padding: 8px 2px;
+  width: 90%;
+}
+
+form input{
+  width: 300px;
+  height: 38px;
+}
+form select {
+  width:300px;
+  height: 38px;
 }

@@ -1,17 +1,33 @@
 
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-6">
-          <plotly-plot [data]="expenseByCategory.data" [layout]="expenseByCategory.layout" (click)="categoryGraphDrillDown($event)"></plotly-plot>
-        </div>
+            <div class="contentWrapper">
 
-        <div class="col-sm-12 col-md-12 col-lg-6">
-            <plotly-plot [data]="expenseByMonth.data" [layout]="expenseByMonth.layout" (click)="monthGraphDrillDown($event)"></plotly-plot>
-        </div>
+            <form>
+              <div class="form-group">
+                  <label for="description">Description</label>
+                  <input id="description" name="description" type="text" class="form-control" [(ngModel)]="description">
+              </div>
 
-    </div>
-    <div class="row">
+              <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" id="amount" name="amount" class="form-control" [(ngModel)]="amount">
+              </div>
+
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select style="display: block" id="category" name="category" [(ngModel)]="selectedCategory">
+                    <option *ngFor="let c of expenseCatArr" [ngValue]="c">{{c.Name}}</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" (click)="CreateExpense()">Create Expense</button>
+            </form>
+          </div>
+
+
+          </div>
         <div class="col-sm-12 col-md-12 col-lg-6">
-          <div class="table-responsive-sm tableWrapper">
+          <div class="table-responsive-sm contentWrapper">
               <table class="table table-striped">
                   <thead class="thead-light">
                     <tr>
@@ -31,7 +47,17 @@
                   </tbody>
                 </table>
           </div>
+        </div>
 
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+          <plotly-plot [data]="expenseByCategory.data" [layout]="expenseByCategory.layout" (click)="categoryGraphDrillDown($event)"></plotly-plot>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <plotly-plot [data]="expenseByMonth.data" [layout]="expenseByMonth.layout" (click)="monthGraphDrillDown($event)"></plotly-plot>
         </div>
 
     </div>
