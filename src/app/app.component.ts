@@ -9,16 +9,27 @@ import { HTTPControllerService } from './httpcontroller.service';
 export class AppComponent {
   private __httpService: HTTPControllerService;
 
-  constructor(httpService: HTTPControllerService) {
-    this.__httpService = httpService;
+  public title = 'splitwiseUI';
+
+  private __opened = true;
+
+  public get opened(){
+    return this.__opened;
   }
 
-  title = 'splitwiseUI';
+  public set opened(opened: boolean) {
+    this.__opened = opened;
+  }
 
-  public _opened = false;
+  constructor(httpService: HTTPControllerService) {
+    this.__httpService = httpService;
+    this.__opened = true;
+  }
+
+
 
   public _toggleSidebar() {
-    this._opened = !this._opened;
+    this.opened = !this.opened;
   }
 
 }

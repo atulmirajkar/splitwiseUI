@@ -1,25 +1,17 @@
-
-    <ng-sidebar-container >
-
-      <ng-sidebar [(opened)]="_opened" mode="over" autoCollapseWidth=700  [sidebarClass]="'app-sidebar'">
-        <div class="row">
-            <i class="fa fa-times fa-lg" (click)="_toggleSidebar()"></i>
-        </div>
-
-        <app-settings></app-settings>
-      </ng-sidebar>
+<div class="navAndContentWrapper">
+  <nav id="sidebar" [ngClass]="{'hidden':this.opened!== true}">
+      <app-settings></app-settings>
+  </nav>
 
 
-      <div ng-sidebar-content >
-        <div class="container-fluid">
+<div class="container-fluid">
+
           <div class="row">
               <i class="fa fa-bars fa-lg" (click)="_toggleSidebar()" style="padding: 2em 1em;"></i>
           </div>
 
 
           <app-monthly-graph></app-monthly-graph>
-        </div>
-      </div>
-    </ng-sidebar-container>
+</div>
 
-
+</div>

@@ -33,15 +33,16 @@ export class SettingsComponent implements OnInit {
     const date = new Date();
     this.selectedStartDate = {year : date.getFullYear(), month : date.getMonth() + 1, day: 1};
     this.selectedEndDate = {year : date.getFullYear(), month : date.getMonth() + 1, day: date.getDate()};
-
    }
 
   ngOnInit() {
-      this.__httpService.getGroups();
-       //subscribe ;
+    this.__httpService.getGroups();
+    //subscribe ;
     this.GroupArrObs.subscribe((data: Group[]) => {
       this.groupArr = data;
     });
+
+
   }
 
   ApplySetting() {

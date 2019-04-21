@@ -1,13 +1,29 @@
-ng-sidebar-container {
-  height: 100vh;
 
+.navAndContentWrapper{
+  display: flex;
+  width: 100%;
+  align-items: stretch;
 }
+
+#sidebar{
+  min-width: 300px;
+  max-width: 300px;
+  min-height: 100vh;
+
+  background: #7386D5;
+  color: #fff;
+}
+
+#sidebar.hidden{
+  margin-left: -300px;
+}
+
 
 i{
   padding: 10px 10px;
 }
+
 app-monthly-graph{
   display: block;
   width: 100%;
-  margin: 20px;
 }
