@@ -96,7 +96,7 @@ export const dateRangeValidator: ValidatorFn = (control: FormGroup): ValidationE
     return {'dateError':true};
   }
 
-  if(startDateCtrl.value.month === endDateCtrl.value.month && startDateCtrl.value.day > endDateCtrl.value.month){
+  if(startDateCtrl.value.month === endDateCtrl.value.month && startDateCtrl.value.day > endDateCtrl.value.day){
     return {'dateError':true};
   }
 

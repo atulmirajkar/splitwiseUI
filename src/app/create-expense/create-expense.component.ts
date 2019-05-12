@@ -1,4 +1,4 @@
-import { Component, OnInit, Directive, Input } from "@angular/core";
+import { Component, OnInit, Directive, Input } from '@angular/core';
 import {
   HTTPControllerService,
   Group,
@@ -7,14 +7,14 @@ import {
   CreateExpense,
   ExpenseUser,
   Expense
-} from "../httpcontroller.service";
-import { Observable } from "rxjs";
-import { NG_VALIDATORS, Validator, AbstractControl, Validators } from "@angular/forms";
+} from '../httpcontroller.service';
+import { Observable } from 'rxjs';
+import { NG_VALIDATORS, Validator, AbstractControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: "app-create-expense",
-  templateUrl: "./create-expense.component.html",
-  styleUrls: ["./create-expense.component.css"]
+  selector: 'app-create-expense',
+  templateUrl: './create-expense.component.html',
+  styleUrls: ['./create-expense.component.css']
 })
 export class CreateExpenseComponent implements OnInit {
   private __httpService: HTTPControllerService;
@@ -87,9 +87,9 @@ export class CreateExpenseComponent implements OnInit {
       payment: false,
       cost: this.amount,
       category_id: this.selectedCategory.id,
-      currency_code: "USD",
+      currency_code: 'USD',
       users: [],
-      creation_method: "equal"
+      creation_method: 'equal'
     };
     const numUsers = this.userArr.length;
     if (numUsers <= 1) {
@@ -102,9 +102,9 @@ export class CreateExpenseComponent implements OnInit {
     for (const index in this.userArr) {
       if(index) {
 
-        expenseObj["users__" + index + "__user_id"] = this.userArr[index].id;
-        expenseObj["users__" + index + "__paid_share"] = share;
-        expenseObj["users__" + index + "__owed_share"] = share;
+        expenseObj['users__' + index + '__user_id'] = this.userArr[index].id;
+        expenseObj['users__' + index + '__paid_share'] = share;
+        expenseObj['users__' + index + '__owed_share'] = share;
       }
     }
 
