@@ -1,0 +1,84 @@
+<form (ngSubmit)="CreateExpense()" #form="ngForm">
+  <div class="form-group">
+    <label for="group">Select Group</label>
+    <select
+      id="group"
+      style="width: 100%"
+      class="form-control"
+      name="group"
+      [(ngModel)]="selectedGroup"
+      (change)="groupChanged($event)"
+      required
+      #groupCtrl="ngModel"
+    >
+      <option *ngFor="let c of groupArr" [ngValue]="c">{{ c.Name }}</option>
+    </select>
+    <span class="help-block" *ngIf="groupCtrl.invalid && groupCtrl.touched"
+      >Please select a group.</span
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      id="description"
+      name="description"
+      type="text"
+      class="form-control"
+      [(ngModel)]="description"
+      required
+      #descriptionCtrl="ngModel"
+    />
+    <span
+      class="help-block"
+      *ngIf="descriptionCtrl.invalid && descriptionCtrl.touched"
+      >Please enter a description.</span
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="amount">Amount</label>
+    <input
+      type="number"
+      id="amount"
+      name="amount"
+      class="form-control"
+      [(ngModel)]="amount"
+      required
+      minValue=0
+      maxValue=99999
+      #amountCtrl="ngModel"
+    />
+    <span class="help-block" *ngIf="amountCtrl.invalid && amountCtrl.touched">
+      Please enter a valid amount.
+    </span>
+  </div>
+
+  <div class="form-group">
+    <label for="category">Category</label>
+    <select
+      id="category"
+      class="form-control"
+      style="width: 100%"
+      name="category"
+      [(ngModel)]="selectedCategory"
+      required
+      #categoryCtrl="ngModel"
+    >
+      <option *ngFor="let c of expenseCatArr" [ngValue]="c">{{
+        c.name
+      }}</option>
+    </select>
+    <span
+      class="help-block"
+      *ngIf="categoryCtrl.touched && categoryCtrl.invalid"
+      >Please select a category.</span
+    >
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
+      Create
+    </button>
+  </div>
+</form>

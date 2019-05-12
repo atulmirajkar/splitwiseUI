@@ -4,18 +4,21 @@
   width: 100%;
   align-items: stretch;
 }
+ngb-tabset{
+  padding: 10px 10px;
+}
 
 #sidebar{
-  min-width: 300px;
-  max-width: 300px;
+  min-width: 350px;
+  max-width: 350px;
   min-height: 100vh;
 
-  background: #7386D5;
-  color: #fff;
+  background: #eff2f7;
+  color: #323335;
 }
 
 #sidebar.hidden{
-  margin-left: -300px;
+  margin-left: -350px;
 }
 
 
@@ -26,4 +29,10 @@ i{
 app-monthly-graph{
   display: block;
   width: 100%;
+}
+
+.loginBtn{
+  position: absolute;
+  bottom: 10px;
+  width: 100px;
 }

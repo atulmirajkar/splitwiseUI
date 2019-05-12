@@ -1,17 +1,37 @@
 <div class="navAndContentWrapper">
-  <nav id="sidebar" [ngClass]="{'hidden':this.opened!== true}">
-      <app-settings></app-settings>
+  <nav
+    id="sidebar"
+    [ngClass]="{ hidden: this.opened !== true }"
+  >
+    <ngb-tabset type="pills" [justify]="tabJustify">
+      <ngb-tab title="Graph Settings">
+          <ng-template ngbTabContent>
+              <app-settings></app-settings>
+
+          </ng-template>
+
+      </ngb-tab>
+      <ngb-tab title="Enter Expense">
+        <ng-template ngbTabContent>
+          <app-create-expense></app-create-expense>
+        </ng-template>
+      </ngb-tab>
+
+    </ngb-tabset>
+    <button type="button" class="btn btn-primary loginBtn" (click)="_login()">
+      Refresh
+    </button>
   </nav>
 
+  <div class="container-fluid">
+    <div class="row">
+      <i
+        class="fa fa-bars fa-lg"
+        (click)="_toggleSidebar()"
+        style="padding: 2em 1em;"
+      ></i>
+    </div>
 
-<div class="container-fluid">
-
-          <div class="row">
-              <i class="fa fa-bars fa-lg" (click)="_toggleSidebar()" style="padding: 2em 1em;"></i>
-          </div>
-
-
-          <app-monthly-graph></app-monthly-graph>
-</div>
-
+    <app-monthly-graph></app-monthly-graph>
+  </div>
 </div>

@@ -1,29 +1,70 @@
+<form (ngSubmit)="ApplySetting()" #form="ngForm" appDateValidDirective>
 
-   <div class="formNewLine">
-    <label >Select Group:</label>
-
-    <select  style="width: 100%" [ngModel]="selectedGroup" (ngModelChange)="groupChange($event)">
-      <option *ngFor="let c of groupArr" [ngValue]="c">{{c.Name}}</option>
+  <div class="form-group">
+    <label for="group">Select Group:</label>
+    <select
+      id="group"
+      name="group"
+      style="width: 100%"
+      class="form-control"
+      [ngModel]="selectedGroup"
+      (ngModelChange)="groupChange($event)"
+      required
+      #groupCtrl="ngModel"
+    >
+      <option *ngFor="let c of groupArr" [ngValue]="c">{{ c.Name }}</option>
     </select>
-   </div>
+    <span class="help-block" *ngIf="groupCtrl.invalid && groupCtrl.touched">Please select a group.</span>
+  </div>
 
-    <div class="formNewLine">
+  <div class="form-group dateFormGroup">
+    <label for="startDatePicker">Start Date:</label>
 
-        <label>Start Date:</label>
-        <i style="display: inline;" class="fa fa-calendar" aria-hidden="true" (click)="d.toggle()" ></i>
-        <input class="form-control" placeholder="yyyy-mm-dd" name="startDatePicker" [(ngModel)]="selectedStartDate" ngbDatepicker #d="ngbDatepicker">
-    </div>
+      <input
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="startDatePicker"
+        id="startDatePicker"
+        [(ngModel)]="selectedStartDate"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        required
+        #startDateCtrl="ngModel"
+      />
+      <i
+      class="fa fa-calendar calIcon"
+      aria-hidden="true"
+      (click)="d.toggle()"
+    ></i>
+    <span class="help-block" *ngIf="startDateCtrl.touched && (startDateCtrl.invalid || form.hasError('dateError'))">Please select a valid start date.</span>
+  </div>
 
-    <div class="formNewLine">
+  <div class="form-group dateFormGroup">
+    <label for="endDatePicker">End Date:</label>
 
-        <label>End Date:</label>
-        <i style="display: inline;" class="fa fa-calendar" aria-hidden="true" (click)="d2.toggle()" ></i>
-        <input class="form-control" placeholder="yyyy-mm-dd" name="endDatePicker" [(ngModel)]="selectedEndDate" ngbDatepicker #d2="ngbDatepicker">
-    </div>
+    <input
+      class="form-control"
+      placeholder="yyyy-mm-dd"
+      name="endDatePicker"
+      id="endDatePicker"
+      [(ngModel)]="selectedEndDate"
+      ngbDatepicker
+      #d2="ngbDatepicker"
+      required
+      #endDateCtrl="ngModel"
+    />
+    <i
+      class="fa fa-calendar calIcon"
+      aria-hidden="true"
+      (click)="d2.toggle()"
+    ></i>
+    <span class="help-block" *ngIf="endDateCtrl.touched && (endDateCtrl.invalid || form.hasError('dateError'))">Please select a valid end date.</span>
+  </div>
 
-    <div class="formNewLine">
-      <button class="btn btn-dark btn-sm" type="submit" (click)="ApplySetting()">Apply</button>
-      <button type="button" class="btn btn-dark btn-sm" (click)="_login()">Refresh</button>
-    </div>
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
+      Apply
+    </button>
 
-
+  </div>
+</form>

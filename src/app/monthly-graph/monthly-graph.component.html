@@ -1,64 +1,42 @@
 
-    <div class="row justify-content-end">
-        <div class="col-sm-12 col-md-12 col-lg-6">
-            <div class="contentWrapper">
+<div class="row justify-content-end">
+  <div class="col-sm-12 col-md-12 col-lg-6">
+    <plotly-plot
+      [data]="expenseByCategory.data"
+      [layout]="expenseByCategory.layout"
+      (click)="categoryGraphDrillDown($event)"
+    ></plotly-plot>
+  </div>
 
-            <form>
-              <div class="form-group">
-                  <label for="description">Description</label>
-                  <input id="description" name="description" type="text" class="form-control" [(ngModel)]="description">
-              </div>
-
-              <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="text" id="amount" name="amount" class="form-control" [(ngModel)]="amount">
-              </div>
-
-              <div class="form-group">
-                <label for="category">Category</label>
-                <select style="display: block" id="category" name="category" [(ngModel)]="selectedCategory">
-                    <option *ngFor="let c of expenseCatArr" [ngValue]="c">{{c.Name}}</option>
-                </select>
-              </div>
-              <button class="btn btn-primary" (click)="CreateExpense()">Create Expense</button>
-            </form>
-          </div>
-
-
-          </div>
-        <div class="col-sm-12 col-md-12 col-lg-6">
-          <div class="table-responsive-sm contentWrapper">
-              <table class="table table-striped">
-                  <thead class="thead-light">
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">User</th>
-                      <th scope="col">Expense</th>
-                      <th scope="col">Category</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let expense of drillExpenseArr">
-                      <td>{{expense.date | date:"MM/dd/yy"}}</td>
-                      <td>{{expense.userName}}</td>
-                      <td>{{expense.owedShare}}</td>
-                      <td>{{expense.category}}</td>
-                  </tr>
-                  </tbody>
-                </table>
-          </div>
-        </div>
-
+  <div class="col-sm-12 col-md-12 col-lg-6">
+    <plotly-plot
+      [data]="expenseByMonth.data"
+      [layout]="expenseByMonth.layout"
+      (click)="monthGraphDrillDown($event)"
+    ></plotly-plot>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-6">
+    <div class="table-responsive-sm contentWrapper">
+      <table class="table table-striped">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">User</th>
+            <th scope="col">Expense</th>
+            <th scope="col">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of drillExpenseArr">
+            <td>{{ expense.date | date: "MM/dd/yy" }}</td>
+            <td>{{ expense.userName }}</td>
+            <td>{{ expense.owedShare }}</td>
+            <td>{{ expense.category }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="row justify-content-end">
-        <div class="col-sm-12 col-md-12 col-lg-6">
-          <plotly-plot [data]="expenseByCategory.data" [layout]="expenseByCategory.layout" (click)="categoryGraphDrillDown($event)"></plotly-plot>
-        </div>
-
-        <div class="col-sm-12 col-md-12 col-lg-6">
-            <plotly-plot [data]="expenseByMonth.data" [layout]="expenseByMonth.layout" (click)="monthGraphDrillDown($event)"></plotly-plot>
-        </div>
-
-    </div>
-
+  </div>
+</div>

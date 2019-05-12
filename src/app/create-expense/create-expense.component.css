@@ -8,12 +8,12 @@ form {
   margin: 0px 0px;
 }
 
+
 .help-block{
   font-size: 80%;
   color: #505763;
   font-style: italic;
 }
-
 
 select.ng-invalid.ng-touched{
   border: 1px solid red;
@@ -25,17 +25,4 @@ input.ng-invalid.ng-touched{
 
 button{
   width:100px;
-}
-
-input[name="startDatePicker"], input[name="endDatePicker"]{
-  padding-left:35px;
-}
-
-.dateFormGroup{
-  position: relative;
-}
-.calIcon{
-  position: absolute;
-  top:30px;
-  padding: 12px 12px;
 }

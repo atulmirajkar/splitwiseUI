@@ -1,16 +1,20 @@
-import { Component, OnInit, Pipe ,PipeTransform, Input} from '@angular/core';
-import { HTTPControllerService, CreateExpense, Category, Group } from '../httpcontroller.service';
+import { Component, OnInit, Pipe, PipeTransform, Input } from '@angular/core';
+import {
+  HTTPControllerService,
+  CreateExpense,
+  Category,
+  Group
+} from '../httpcontroller.service';
 import { Observable } from 'rxjs';
-import { Expense,User} from '../httpcontroller.service';
-import { groupBy } from 'rxjs/internal/operators/groupBy';
+import { Expense, User } from '../httpcontroller.service';
 
 class DrillDownExpense {
   userName: string;
   owedShare: number;
   date: Date;
-  category:string;
+  category: string;
 
-  constructor(){
+  constructor() {
     this.userName = '';
     this.owedShare = 0;
     this.date = undefined;
@@ -21,100 +25,127 @@ class DrillDownExpense {
 @Component({
   selector: 'app-monthly-graph',
   templateUrl: './monthly-graph.component.html',
-  styleUrls: ['./monthly-graph.component.css'],
+  styleUrls: ['./monthly-graph.component.css']
 })
 export class MonthlyGraphComponent implements OnInit {
   httpService: HTTPControllerService;
 
-  //expenses by category
+  // expenses by category
   public categoryExpenseMap: Map<string, DrillDownExpense[]>;
 
-  //expenses by month
+  // expenses by month
   public monthExpenseMap: Map<string, DrillDownExpense[]>;
 
-  public drillExpenseArr:DrillDownExpense[];
+  public drillExpenseArr: DrillDownExpense[];
 
+  // user arr
+  public userArr: User[];
 
-  //user arr
-  public userArr:User[];
-
-  //expense
+  // expense
   public expenseArr: Observable<Expense[]>;
 
-  //date
+  // date
   public dateArr: Date[];
 
-  //date with month start date
+  // date with month start date
   public monthArr: string[];
 
-  //expense
+  // expense
   public expenseValArr: Number[];
 
-  //expense category arr
+  // expense category arr
   public expenseCatArr: Category[];
 
-  //selected category
+  // selected category
   public selectedCategory: Category;
 
-  //description
+  // description
   public description: string;
 
-  //amount
-  public amount:number;
+  // amount
+  public amount: number;
 
-  //graph category
+  // graph category
   public categoryArr: string[];
 
-  //monthNames
-  monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
+  // monthNames
+  monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
 
-  //selected group obs
+  // selected group obs
   public selectedGroupObs: Observable<Group>;
   public selectedGroup: Group;
 
   public expenseByCategory = {
     data: [
-        { x: [], y: [], type: 'bar', marker: {color: 'cornflowerblue'} ,
-          transforms: [{
+      {
+        x: [],
+        y: [],
+        type: 'bar',
+        marker: { color: 'cornflowerblue' },
+        transforms: [
+          {
             type: 'aggregate',
             groups: [],
-            aggregations: [{
-              target: 'y', func: 'sum', enabled: true
-            }]
-          }]
-      },
+            aggregations: [
+              {
+                target: 'y',
+                func: 'sum',
+                enabled: true
+              }
+            ]
+          }
+        ]
+      }
     ],
-    layout: { title: 'Expenses by category'}
+    layout: { title: 'Expenses by category' }
   };
-
 
   public expenseByMonth = {
     data: [
-        { x: [], y: [], type: 'bar', marker: {color: 'cornflowerblue'} ,
-          transforms: [{
+      {
+        x: [],
+        y: [],
+        type: 'bar',
+        marker: { color: 'cornflowerblue' },
+        transforms: [
+          {
             type: 'aggregate',
             groups: [],
-            aggregations: [{
-              target: 'y', func: 'sum', enabled: true
-            }]
-          }]
-      },
+            aggregations: [
+              {
+                target: 'y',
+                func: 'sum',
+                enabled: true
+              }
+            ]
+          }
+        ]
+      }
     ],
-    layout: { title: 'Expenses by month'}
+    layout: { title: 'Expenses by month' }
   };
-
-
 
   constructor(httpService: HTTPControllerService) {
     this.httpService = httpService;
-    //this.expenseCatArrObs = this.httpService.categoryArr;
+    // this.expenseCatArrObs = this.httpService.categoryArr;
     this.expenseArr = httpService.expenseArr;
-    this.categoryExpenseMap = new Map<string,DrillDownExpense[]>();
+    this.categoryExpenseMap = new Map<string, DrillDownExpense[]>();
     this.monthExpenseMap = new Map<string, DrillDownExpense[]>();
-    this.description="";
-    this.amount=0.0;
+    this.description = '';
+    this.amount = 0.0;
     this.clearProperties();
   }
 
@@ -125,28 +156,28 @@ export class MonthlyGraphComponent implements OnInit {
     this.monthArr = [];
     this.categoryExpenseMap.clear();
     this.monthExpenseMap.clear();
-    this.drillExpenseArr= [];
+    this.drillExpenseArr = [];
   }
 
   ngOnInit() {
-
-    //subscribe expenseArr
+    // subscribe expenseArr
     this.httpService.expenseArr.subscribe((data: Expense[]) => {
       let tempDate: Date;
-      let monthStr:string;
+      let monthStr: string;
       this.clearProperties();
       data.forEach(element => {
         tempDate = new Date(element.date);
-        monthStr = tempDate.getFullYear() + ' ' + this.monthNames[tempDate.getMonth()];
+        monthStr =
+          tempDate.getFullYear() + ' ' + this.monthNames[tempDate.getMonth()];
         this.dateArr.push(tempDate);
         this.expenseValArr.push(element.owed_share);
         this.categoryArr.push(element.category);
         this.monthArr.push(monthStr);
 
-        //setup map for drill down
+        // setup map for drill down
         const drillDownExpense = new DrillDownExpense();
         drillDownExpense.userName = this.getUserName(element.user_id);
-        drillDownExpense.owedShare =element.owed_share;
+        drillDownExpense.owedShare = element.owed_share;
         drillDownExpense.date = tempDate;
         drillDownExpense.category = element.category;
 
@@ -159,13 +190,11 @@ export class MonthlyGraphComponent implements OnInit {
 
         const monthExpenseArr = this.monthExpenseMap.get(monthStr);
         if (!monthExpenseArr) {
-          this.monthExpenseMap.set(monthStr,[drillDownExpense]);
+          this.monthExpenseMap.set(monthStr, [drillDownExpense]);
         } else {
           monthExpenseArr.push(drillDownExpense);
         }
-
       });
-
 
       this.expenseByCategory.data[0].x = this.categoryArr;
       this.expenseByCategory.data[0].y = this.expenseValArr;
@@ -174,25 +203,23 @@ export class MonthlyGraphComponent implements OnInit {
       this.expenseByMonth.data[0].x = this.monthArr;
       this.expenseByMonth.data[0].y = this.expenseValArr;
       this.expenseByMonth.data[0].transforms[0].groups = this.monthArr;
-
     });
 
-    //subscribe userArr
+    // subscribe userArr
     this.httpService.userArr.subscribe((data: User[]) => {
       this.userArr = data;
     });
 
-    //subscribe expenseCatArr;
+    // subscribe expenseCatArr;
     this.httpService.categoryArr.subscribe((data: Category[]) => {
       this.expenseCatArr = data;
-    })
+    });
 
-    //subscribe selected group
-    this.httpService.selectedGroup.subscribe( (data:Group) => {
+    // subscribe selected group
+    this.httpService.selectedGroup.subscribe((data: Group) => {
       this.selectedGroup = data;
     });
   }
-
 
   getUserName(userID: number): string {
     if (!userID) {
@@ -217,14 +244,13 @@ export class MonthlyGraphComponent implements OnInit {
     if (Array.isArray(data.points) && data.points[0].x !== '') {
       this.drillExpenseArr = this.categoryExpenseMap.get(data.points[0].x);
     }
-
   }
 
   /**
    *
    * @param data from click event
    */
-  monthGraphDrillDown(data){
+  monthGraphDrillDown(data) {
     if (!data) {
       return;
     }
@@ -233,45 +259,5 @@ export class MonthlyGraphComponent implements OnInit {
     }
   }
 
-  CreateExpense(){
 
-    //     cost	10
-    // currency_code	USD
-    // group_id	6962826
-    // users__0__user_id	1446024
-    // users__0__paid_share	10.00
-    // users__0__owed_share	5.00
-    // users__1__user_id	6521219
-    // users__1__paid_share	0.00
-    // users__1__owed_share	5.00
-    // category_id	18
-    // date	Sun+Apr+14+2019+20:32:46+GMT-0500+(Central+Daylight+Time)
-    // description	test
-    // creation_method	equal
-
-    let expenseObj:CreateExpense ={
-      description :this.description,
-      group_id: this.selectedGroup.ID,
-      payment :false,
-      cost:this.amount,
-      category_id:this.selectedCategory.ID,
-      currency_code:"USD",
-
-    }
-    let numUsers = this.userArr.length;
-    if(numUsers<=1){
-      return;
-    }
-
-    //share for other users
-    let share = this.amount / numUsers;
-
-    for(const index in this.userArr) {
-      expenseObj['users__'+index+'__user_id']=this.userArr[index].id;
-      expenseObj['users__'+index+'__paid_share']=share;
-      expenseObj['users__'+index+'__owed_share']=share;
-    }
-
-    this.httpService.createTestExpense(expenseObj);
-  }
 }

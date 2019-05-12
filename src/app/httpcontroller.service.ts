@@ -7,26 +7,34 @@ import { environment } from '../environments/environment';
 
 /**********************************create expense******************************** */
 export interface CreateExpense {
-  group_id:        number;
-  description:     string;
-  payment:         boolean;
-  cost:            number;
+  group_id: number;
+  description: string;
+  payment: boolean;
+  cost: number;
+  category_id: number;
+  currency_code: string;
+  creation_method:string;
   // users__0__user_id:number;
   // users__0__paid_share:number;
   // users__0__owed_share:number;
   // users__1__user_id?:number;
   // users__1__paid_share?:number;
   // users__1__owed_share?:number;
-  category_id:   number;
-  currency_code?: string;
-  [userShare: string] : number|boolean|string;
+  users: ExpenseUser[];
 }
 
+export interface ExpenseUser {
+  paid_share:number;
+  owed_share:number;
+  net_balance:number;
+  user: User;
+  user_id:number;
+}
 /**********************************create expense******************************** */
 
 export class Category{
-  public ID:number;
-  public Name:string;
+  public id:number;
+  public name:string;
 }
 
 export class Group{
@@ -48,6 +56,8 @@ export class Expense{
 export class User{
   public id: number;
   public first_name: string;
+  public last_name?:string;
+  public picture?:object;
 }
 
 interface Config {
@@ -85,11 +95,20 @@ export class HTTPControllerService {
   //baseURL
   private baseURL: string;
 
+  //is auth done?
+  private __isAuthenticated;
+  public get isAuthenticated(): boolean {
+    return this.__isAuthenticated;
+  }
+  public set isAuthenticated(isAuthDone:boolean){
+    this.__isAuthenticated=isAuthDone;
+  }
+
   //constructor
   constructor(http: HttpClient) {
     this.__http = http;
     this.baseURL = environment.baseURL;
-
+    this.__isAuthenticated = false;
   }
 
   changeGroupSelection(group: Group){
@@ -99,14 +118,22 @@ export class HTTPControllerService {
   /*log out */
   logout() {
     this.__http.get(this.baseURL + 'logout', { withCredentials: true })
-    .subscribe();
+    .subscribe(() => {
+      this.isAuthenticated=false;
+    });
   }
 
 
   /*log in */
   login() {
-    this.__http.get(this.baseURL, { withCredentials: true })
-    .subscribe();
+    if(!this.isAuthenticated)
+    {
+      this.__http.get(this.baseURL, { withCredentials: true })
+      .subscribe(() => {
+        this.isAuthenticated = true;
+      });
+
+    }
   }
 
   /**
@@ -182,7 +209,6 @@ export class HTTPControllerService {
     };
 
     this.__http.post(this.baseURL + 'CreateExpense', JSON.stringify(expenseObj), httpOptions)
-    //this.__http.get(this.baseURL + 'CreateExpense', {withCredentials: true})
     .subscribe((data) => {
       console.log(data);
     });
