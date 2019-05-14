@@ -93,7 +93,38 @@ export class HTTPControllerService {
   private __selectedEndDateObs = new BehaviorSubject<NgbDateStruct>({ year: 0, month: 0, day: 0 });
   public selectedEndDateObs: Observable<NgbDateStruct> = this.__selectedEndDateObs.asObservable();
 
+  //description
+  private __descriptionObs = new BehaviorSubject<string>("");
+  public descriptionObs: Observable<string> = this.__descriptionObs.asObservable();
+  private __description: string;
+  public get descripion():string{
+    return this.__description;
+  }
+  public set description(descripion:string){
+    this.__description = descripion;
+  }
 
+  //amount
+  private __amountObs = new BehaviorSubject<number>(0);
+  public amountObs: Observable<number> = this.__amountObs.asObservable();
+  private __amount: number;
+  public get amount():number{
+    return this.__amount;
+  }
+  public set amount(amount:number){
+    this.__amount= amount;
+  }
+
+  //selected category
+  private __selectedCatObs = new BehaviorSubject<Category>(new Category());
+  public selectedCatObs: Observable<Category> = this.__selectedCatObs.asObservable();
+  private __selectedCat: Category;
+  public get selectedCat():Category{
+    return this.__selectedCat;
+  }
+  public set selectedCat(selectedCat:Category){
+    this.__selectedCat= selectedCat;
+  }
 
   //users
   private __userArr = new BehaviorSubject<User[]>([]);
@@ -154,6 +185,20 @@ export class HTTPControllerService {
     this.__selectedEndDateObs.next(date);
   }
 
+  changeDescription(description: string){
+    this.__description = description;
+    this.__descriptionObs.next(description);
+  }
+
+  changeAmount(amount: number){
+    this.__amount = amount;
+    this.__amountObs.next(amount);
+  }
+
+  changeSelectedCat(selectedCat:Category){
+    this.__selectedCat = selectedCat;
+    this.__selectedCatObs.next(selectedCat);
+  }
   /*log out */
   logout() {
     this.__http.get(this.baseURL + 'logout', { withCredentials: true })
@@ -262,6 +307,16 @@ export class HTTPControllerService {
           month: date.getMonth() + 1,
           day: date.getDate()
         });
+
+        //clear description
+        this.changeDescription("");
+
+        //clear amount
+        this.changeAmount(0);
+
+        //clear category
+        this.changeSelectedCat(new Category());
+
         this.getExpenses(
           this.__selectedGroup.ID,
           this.__selectedStartDate,

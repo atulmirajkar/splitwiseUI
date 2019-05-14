@@ -62,6 +62,21 @@ export class CreateExpenseComponent implements OnInit {
     if(!this.groupArr || this.groupArr.length <1){
       this.__httpService.getGroups();
     }
+
+    //subscribe description and amount
+    this.__httpService.descriptionObs.subscribe((data:string)=> {
+      this.description=data;
+    });
+
+    this.__httpService.amountObs.subscribe((data:number)=>{
+      this.amount=data;
+    });
+
+    //subscribe description
+    this.__httpService.selectedCatObs.subscribe((data:Category)=>{
+      this.selectedCategory=data;
+    })
+
     this.__httpService.getCategories();
   }
 
@@ -72,6 +87,18 @@ export class CreateExpenseComponent implements OnInit {
       this.__httpService.getUsers(this.selectedGroup.ID);
       this.__httpService.changeGroupSelection(this.selectedGroup);
     }
+  }
+
+  descriptionChanged(data:string){
+    this.description=data;
+    this.__httpService.changeDescription(data);
+  }
+  amountChanged(data:number){
+    this.amount = data;
+    this.__httpService.changeAmount(data);
+  }
+  selectedCategoryChanged(){
+    this.__httpService.changeSelectedCat(this.selectedCategory);
   }
 
   CreateExpense() {

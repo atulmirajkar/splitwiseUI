@@ -25,7 +25,8 @@
       name="description"
       type="text"
       class="form-control"
-      [(ngModel)]="description"
+      [ngModel]="description"
+      (change)="descriptionChanged($event.target.value)"
       required
       #descriptionCtrl="ngModel"
     />
@@ -43,7 +44,8 @@
       id="amount"
       name="amount"
       class="form-control"
-      [(ngModel)]="amount"
+      [ngModel]="amount"
+      (change)="amountChanged($event.target.value)"
       required
       minValue=0
       maxValue=99999
@@ -62,6 +64,7 @@
       style="width: 100%"
       name="category"
       [(ngModel)]="selectedCategory"
+      (change)="selectedCategoryChanged()"
       required
       #categoryCtrl="ngModel"
     >
