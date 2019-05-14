@@ -5,8 +5,6 @@ import {
   Category,
   User,
   CreateExpense,
-  ExpenseUser,
-  Expense
 } from '../httpcontroller.service';
 import { Observable } from 'rxjs';
 import { NG_VALIDATORS, Validator, AbstractControl, Validators } from '@angular/forms';
@@ -46,6 +44,11 @@ export class CreateExpenseComponent implements OnInit {
       this.groupArr = data;
     });
 
+    // subscribe selected cat
+    this.__httpService.selectedGroupObs.subscribe((data:Group)=>{
+      this.selectedGroup=data;
+    })
+
     // subscribe expenseCatArr;
     this.__httpService.categoryArr.subscribe((data: Category[]) => {
       this.expenseCatArr = data;
@@ -56,14 +59,18 @@ export class CreateExpenseComponent implements OnInit {
       this.userArr = data;
     });
 
-    this.__httpService.getGroups();
+    if(!this.groupArr || this.groupArr.length <1){
+      this.__httpService.getGroups();
+    }
     this.__httpService.getCategories();
   }
 
   // listeners
   groupChanged() {
+
     if (this.selectedGroup) {
       this.__httpService.getUsers(this.selectedGroup.ID);
+      this.__httpService.changeGroupSelection(this.selectedGroup);
     }
   }
 
@@ -88,7 +95,6 @@ export class CreateExpenseComponent implements OnInit {
       cost: this.amount,
       category_id: this.selectedCategory.id,
       currency_code: 'USD',
-      users: [],
       creation_method: 'equal'
     };
     const numUsers = this.userArr.length;
@@ -103,8 +109,8 @@ export class CreateExpenseComponent implements OnInit {
       if(index) {
 
         expenseObj['users__' + index + '__user_id'] = this.userArr[index].id;
-        expenseObj['users__' + index + '__paid_share'] = share;
-        expenseObj['users__' + index + '__owed_share'] = share;
+        expenseObj['users__' + index + '__paid_share'] = String(share);
+        expenseObj['users__' + index + '__owed_share'] = String(share);
       }
     }
 

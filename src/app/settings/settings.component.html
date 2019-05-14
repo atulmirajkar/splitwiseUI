@@ -25,7 +25,8 @@
         placeholder="yyyy-mm-dd"
         name="startDatePicker"
         id="startDatePicker"
-        [(ngModel)]="selectedStartDate"
+        [ngModel]="selectedStartDate"
+        (dateSelect)="onStartDateSelect($event)"
         ngbDatepicker
         #d="ngbDatepicker"
         required
@@ -47,7 +48,8 @@
       placeholder="yyyy-mm-dd"
       name="endDatePicker"
       id="endDatePicker"
-      [(ngModel)]="selectedEndDate"
+      [ngModel]="selectedEndDate"
+      (dateSelect)="onEndDateSelect($event)"
       ngbDatepicker
       #d2="ngbDatepicker"
       required

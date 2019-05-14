@@ -140,7 +140,6 @@ export class MonthlyGraphComponent implements OnInit {
 
   constructor(httpService: HTTPControllerService) {
     this.httpService = httpService;
-    // this.expenseCatArrObs = this.httpService.categoryArr;
     this.expenseArr = httpService.expenseArr;
     this.categoryExpenseMap = new Map<string, DrillDownExpense[]>();
     this.monthExpenseMap = new Map<string, DrillDownExpense[]>();
@@ -216,7 +215,7 @@ export class MonthlyGraphComponent implements OnInit {
     });
 
     // subscribe selected group
-    this.httpService.selectedGroup.subscribe((data: Group) => {
+    this.httpService.selectedGroupObs.subscribe((data: Group) => {
       this.selectedGroup = data;
     });
   }

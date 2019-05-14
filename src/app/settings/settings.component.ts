@@ -1,6 +1,6 @@
 import { Component, OnInit, Directive } from '@angular/core';
 import { HTTPControllerService, Group } from '../httpcontroller.service';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { NG_VALIDATORS, Validator, AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 
@@ -14,8 +14,13 @@ export class SettingsComponent implements OnInit {
 
   // setting properties
   public selectedGroup: Group;
+  public selectedGroupObs: Observable<any>;
+
   public selectedStartDate: NgbDateStruct;
+  public selectedStartDateObs: Observable<any>;
+
   public selectedEndDate: NgbDateStruct;
+  public selectedEndDateObs: Observable<any>;
 
   public GroupArrObs: Observable<any>;
   public groupArr: Group[];
@@ -23,28 +28,38 @@ export class SettingsComponent implements OnInit {
   constructor(httpService: HTTPControllerService) {
     this.__httpService = httpService;
     this.GroupArrObs = this.__httpService.groupArr;
-
-    // default start date to start of month
-    // default end date to today
-    const date = new Date();
-    this.selectedStartDate = {
-      year: date.getFullYear(),
-      month: date.getMonth() + 1,
-      day: 1
-    };
-    this.selectedEndDate = {
-      year: date.getFullYear(),
-      month: date.getMonth() + 1,
-      day: date.getDate()
-    };
+    this.selectedGroupObs=this.__httpService.selectedGroupObs;
+    this.selectedStartDateObs=this.__httpService.selectedStartDateObs;
+    this.selectedEndDateObs=this.__httpService.selectedEndDateObs;
   }
 
   ngOnInit() {
-    this.__httpService.getGroups();
-    // subscribe
+
+    // subscribe selected cat
+    this.selectedGroupObs.subscribe((data:Group)=>{
+      this.selectedGroup=data;
+    })
+    //subscribe group arr
     this.GroupArrObs.subscribe((data: Group[]) => {
       this.groupArr = data;
     });
+
+    //start date and end date
+    this.selectedStartDateObs.subscribe((data:NgbDate) => {
+      this.selectedStartDate=data;
+    })
+    this.selectedEndDateObs.subscribe((data:NgbDateStruct)=>{
+      this.selectedEndDate=data;
+    })
+
+    //initialize
+    if(!this.groupArr || this.groupArr.length <1){
+      this.__httpService.getGroups();
+    }
+
+    this.__httpService.getCategories();
+
+
   }
 
 
@@ -55,15 +70,20 @@ export class SettingsComponent implements OnInit {
       this.selectedStartDate,
       this.selectedEndDate
     );
-    this.__httpService.getUsers(this.selectedGroup.ID);
-    this.__httpService.getCategories();
+
   }
 
+  public onStartDateSelect(data){
+    this.__httpService.changeStartDate(data);
+  }
 
+  public onEndDateSelect(data){
+    this.__httpService.changeEndDate(data);
+  }
 
   public groupChange(data) {
-    console.log(data);
     this.selectedGroup = data;
+    this.__httpService.getUsers(this.selectedGroup.ID);
     this.__httpService.changeGroupSelection(this.selectedGroup);
   }
 }
