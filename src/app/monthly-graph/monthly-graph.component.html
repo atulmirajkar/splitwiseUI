@@ -18,19 +18,21 @@
 </div>
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lg-6">
-    <div class="table-responsive-sm contentWrapper">
+    <div class="table-responsive-md">
       <table class="table table-striped">
         <thead class="thead-light">
           <tr>
-            <th scope="col">Date</th>
-            <th scope="col">User</th>
-            <th scope="col">Expense</th>
-            <th scope="col">Category</th>
+            <th style="width: 20%" scope="col">Date</th>
+            <th style="width: 30%" scope="col">Description</th>
+            <th style="width: 10%" scope="col">User</th>
+            <th style="width: 15%" scope="col">Expense</th>
+            <th style="width: 25%" scope="col">Category</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let expense of drillExpenseArr">
             <td>{{ expense.date | date: "MM/dd/yy" }}</td>
+            <td>{{ expense.description }}</td>
             <td>{{ expense.userName }}</td>
             <td>{{ expense.owedShare }}</td>
             <td>{{ expense.category }}</td>

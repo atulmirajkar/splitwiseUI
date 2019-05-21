@@ -14,6 +14,7 @@ export interface CreateExpense {
   category_id: number;
   currency_code: string;
   creation_method: string;
+  date: Date;
 }
 
 /**********************************create expense******************************** */
@@ -37,6 +38,7 @@ export class Expense {
   user_id: number;
   owed_share: number;
   date: string;
+  description: string;
 }
 
 export class User {

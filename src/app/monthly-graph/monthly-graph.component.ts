@@ -13,12 +13,14 @@ class DrillDownExpense {
   owedShare: number;
   date: Date;
   category: string;
+  description: string;
 
   constructor() {
     this.userName = '';
     this.owedShare = 0;
     this.date = undefined;
     this.category = '';
+    this.description = '';
   }
 }
 
@@ -179,6 +181,7 @@ export class MonthlyGraphComponent implements OnInit {
         drillDownExpense.owedShare = element.owed_share;
         drillDownExpense.date = tempDate;
         drillDownExpense.category = element.category;
+        drillDownExpense.description = element.description;
 
         const catExpenseArr = this.categoryExpenseMap.get(element.category);
         if (!catExpenseArr) {

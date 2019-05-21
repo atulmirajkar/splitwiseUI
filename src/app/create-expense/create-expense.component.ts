@@ -122,7 +122,8 @@ export class CreateExpenseComponent implements OnInit {
       cost: this.amount,
       category_id: this.selectedCategory.id,
       currency_code: 'USD',
-      creation_method: 'equal'
+      creation_method: 'equal',
+      date: convertUTCDateToLocalDate(new Date())
     };
     const numUsers = this.userArr.length;
     if (numUsers <= 1) {
@@ -144,6 +145,17 @@ export class CreateExpenseComponent implements OnInit {
     this.__httpService.createTestExpense(expenseObj);
   }
 
+}
+
+function convertUTCDateToLocalDate(date) {
+  var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+
+  var offset = date.getTimezoneOffset() / 60;
+  var hours = date.getHours();
+
+  newDate.setHours(hours - offset);
+
+  return newDate;
 }
 
 @Directive({
