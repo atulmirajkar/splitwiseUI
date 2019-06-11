@@ -131,7 +131,14 @@ export class CreateExpenseComponent implements OnInit {
     }
 
     // share for other users
-    const share = this.amount / numUsers;
+    let share = this.amount / numUsers;
+
+    //round to 2 decimals
+    share = Math.round(share * 100) / 100;
+
+    //recalculate cost. e.g. 24.25 / 2 = 12.125 => round  = 12.13 => recalculate 12.26
+    expenseObj.cost = share * numUsers;
+
 
     for (const index in this.userArr) {
       if(index) {
